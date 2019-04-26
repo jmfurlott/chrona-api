@@ -1,5 +1,8 @@
 module.exports = {
-  "transform": {
+  transform: {
     "^.+\\.ts?$": "ts-jest"
   },
+  testPathIgnorePatterns: [
+    "__tests__/utils.ts"
+  ]
 }
