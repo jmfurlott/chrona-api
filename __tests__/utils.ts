@@ -21,6 +21,7 @@ export const testFactory = async (connection) => {
 
 
   return {
+    bookmark,
     user
   };
 };
