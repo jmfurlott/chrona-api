@@ -71,3 +71,17 @@ test('POST /users creates and returns expected user', async (): Promise<any> => 
   expect(res.data.email).toBe(newUser.email);
   expect(res.data.github_id).toBe(newUser.github_id);
 });
+
+
+test('DELETE /users/:id updates and returns 204', async (): Promise<any> => {
+  const app = makeApp();
+  const { user } = await testFactory(connection);
+
+  // The actual delete returns a 204
+  let res = await axiosist(app).delete(`/users/${ user.id }`);
+  expect(res.status).toBe(204);
+
+  // Show now 404
+  res = await axiosist(app).get(`/users/${ user.id }`);
+  expect(res.status).toBe(404);
+});
