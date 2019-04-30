@@ -2,7 +2,7 @@ import { Router } from "express";
 import * as express from "express";
 import { getRepository } from "typeorm";
 
-import { User } from "./entity/User";
+import { User } from "../entity/User";
 
 export default (): Router => {
   const router = express.Router();
