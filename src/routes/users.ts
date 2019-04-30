@@ -8,6 +8,20 @@ export default (): Router => {
   const router = express.Router();
   const userRepository = getRepository(User);
 
+  const checkUserExists = async (req, res, next): Promise<void> => {
+    try {
+      if (
+        (await userRepository.count({ id: req.params.id, archived: false })) ===
+          0
+      ) {
+        res.sendStatus(404);
+      }
+      next();
+    } catch (e) {
+      next(e);
+    }
+  }
+
   router.get("/users", async (req, res, next) => {
     try {
       res.json(await userRepository.find());
@@ -16,12 +30,11 @@ export default (): Router => {
     }
   });
 
-  router.get("/users/:id", async (req, res, next) => {
+  router.get("/users/:id", checkUserExists, async (req, res, next) => {
     try {
-      if (await userRepository.count({ id: req.params.id, archived: false }) === 0) {
-        res.sendStatus(404);
-      }
-      res.json(await userRepository.findOne({ id: req.params.id, archived: false }));
+      res.json(
+        await userRepository.findOne({ id: req.params.id, archived: false }),
+      );
     } catch (e) {
       next(e);
     }
@@ -35,7 +48,7 @@ export default (): Router => {
     }
   });
 
-  router.put("/users/:id", async (req, res, next) => {
+  router.put("/users/:id", checkUserExists, async (req, res, next) => {
     try {
       await userRepository.update(req.params.id, req.body);
       res.json(await userRepository.findOne(req.params.id));
@@ -44,7 +57,7 @@ export default (): Router => {
     }
   });
 
-  router.delete("/users/:id", async (req, res, next) => {
+  router.delete("/users/:id", checkUserExists, async (req, res, next) => {
     try {
       await userRepository.update(req.params.id, { archived: true });
       res.sendStatus(204);
