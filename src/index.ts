@@ -1,14 +1,26 @@
 import "reflect-metadata";
 import { createConnection } from "typeorm";
 import { User } from "./entity/User";
+import { Bookmark } from "./entity/Bookmark";
 
 import makeApp from "./app";
 
-createConnection().then(/* async */ connection => {
-
+createConnection({
+  type: "postgres",
+  host: "bookmarks-api-dev.csijvd7n1pva.us-east-1.rds.amazonaws.com",
+  port: 5432,
+  username: "jmfurlott",
+  password: "52RoUWaeaYLEDRy",
+  database: "bookmarks",
+  synchronize: true,
+  logging: false,
+  entities: [
+    User,
+    Bookmark,
+  ]
+}).then(() => {
   // Start express server
   const app = makeApp();
-  app.listen(3000);
-  console.log("Express server has started on port 3000. Open http://localhost:3000/users to see results");
+  app.listen(3000, () => console.log("Server started at 3000"));
 
 }).catch(error => console.log(error));

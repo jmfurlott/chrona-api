@@ -5,7 +5,6 @@ import { Application, Request, Response } from "express";
 
 import routes from "./routes";
 
-
 export default (): Application => {
   // create express app
   const app = express();
@@ -13,6 +12,7 @@ export default (): Application => {
   app.use(cors());
 
   app.use(routes());
+  app.get('/', (req, res) => res.send('Hello World!'))
 
   return app;
 };
