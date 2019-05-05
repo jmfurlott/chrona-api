@@ -1,17 +1,22 @@
 import "reflect-metadata";
 import { createConnection } from "typeorm";
+
+require("dotenv").config();
+
 import { User } from "./entity/User";
 import { Bookmark } from "./entity/Bookmark";
 
 import makeApp from "./app";
 
+console.log("env", process.env);
+
 createConnection({
   type: "postgres",
-  host: "bookmarks-api-dev.csijvd7n1pva.us-east-1.rds.amazonaws.com",
+  host: process.env.BOOKMARKS_DB_HOST,
   port: 5432,
-  username: "jmfurlott",
-  password: "52RoUWaeaYLEDRy",
-  database: "bookmarks",
+  username: process.env.BOOKMARKS_DB_USERNAME,
+  password: process.env.BOOKMARKS_DB_PASSWORD,
+  database: process.env.BOOKMARKS_DB_NAME,
   synchronize: true,
   logging: false,
   entities: [

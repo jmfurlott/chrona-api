@@ -11,8 +11,8 @@ export default (): Application => {
   app.use(bodyParser.json());
   app.use(cors());
 
-  app.use(routes());
   app.get('/', (req, res) => res.send('Hello World!'))
+  app.use(routes());
 
   return app;
 };
