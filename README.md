@@ -1,7 +1,8 @@
-# Awesome Project Build with TypeORM
+# bookmarks-api
 
-Steps to run this project:
+## Necessary variables
 
-1. Run `npm i` command
-2. Setup database settings inside `ormconfig.json` file
-3. Run `npm start` command
+- `BOOKMARKS_DB_NAME`
+- `BOOKMARKS_DB_PASSWORD`
+- `BOOKMARKS_DB_USERNAME`
+- `BOOKMARKS_DB_HOST`

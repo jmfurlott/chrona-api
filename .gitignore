@@ -1,9 +1,13 @@
+.env
+
+# TypeORM automatic entries
 .idea/
 .vscode/
 node_modules/
 build/
 tmp/
 temp/
+
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
