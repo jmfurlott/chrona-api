@@ -1,6 +1,6 @@
 import axiosist from "axiosist";
-import { createConnection } from "typeorm";
 
+import createConnection from "../src/connection";
 import makeApp from "../src/app";
 
 

@@ -1,7 +1,7 @@
 import axiosist from "axiosist";
 import * as faker from "faker";
-import { createConnection } from "typeorm";
 
+import createConnection from "../src/connection";
 import makeApp from "../src/app";
 import { testFactory } from "./utils";
 import { Bookmark } from "../src/entity/Bookmark";
@@ -28,7 +28,7 @@ test('GET /bookmarks returns expected count', async (): Promise<any> => {
 test('GET /bookmarks/:id returns expected bookmark', async (): Promise<any> => {
   const app = makeApp();
   const { bookmark } = await testFactory(connection);
-  const res = await axiosist(app).get(`/bookmarks/${ bookmark.id }`);
+  const res = await axiosist(app).get(`/bookmarks/${bookmark.id}`);
   expect(res.status).toBe(200);
   expect(res.data.id).toBe(bookmark.id);
 });
@@ -42,7 +42,7 @@ test('PUT /bookmarks/:id updates and returns expected bookmark', async (): Promi
     title: faker.lorem.words(),
   };
 
-  const res = await axiosist(app).put(`/bookmarks/${ bookmark.id }`, newData);
+  const res = await axiosist(app).put(`/bookmarks/${bookmark.id}`, newData);
   expect(res.status).toBe(200);
   expect(res.data.id).toBe(bookmark.id);
   expect(res.data.title).toBe(newData.title);
@@ -72,10 +72,10 @@ test('DELETE /bookmarks/:id updates and returns 204', async (): Promise<any> => 
   const { bookmark } = await testFactory(connection);
 
   // The actual delete returns a 204
-  let res = await axiosist(app).delete(`/bookmarks/${ bookmark.id }`);
+  let res = await axiosist(app).delete(`/bookmarks/${bookmark.id}`);
   expect(res.status).toBe(204);
 
   // Show now 404
-  res = await axiosist(app).get(`/bookmarks/${ bookmark.id }`);
+  res = await axiosist(app).get(`/bookmarks/${bookmark.id}`);
   expect(res.status).toBe(404);
 });

@@ -1,7 +1,7 @@
 import axiosist from "axiosist";
 import * as faker from "faker";
-import { createConnection } from "typeorm";
 
+import createConnection from "../src/connection";
 import makeApp from "../src/app";
 import { testFactory } from "./utils";
 import { User } from "../src/entity/User";
@@ -28,7 +28,7 @@ test('GET /users returns expected count', async (): Promise<any> => {
 test('GET /users/:id returns expected user', async (): Promise<any> => {
   const app = makeApp();
   const { user } = await testFactory(connection);
-  const res = await axiosist(app).get(`/users/${ user.id }`);
+  const res = await axiosist(app).get(`/users/${user.id}`);
   expect(res.status).toBe(200);
   expect(res.data.id).toBe(user.id);
 });
@@ -42,7 +42,7 @@ test('PUT /users/:id updates and returns expected user', async (): Promise<any> 
     name: faker.name.findName(),
   };
 
-  const res = await axiosist(app).put(`/users/${ user.id }`, newData);
+  const res = await axiosist(app).put(`/users/${user.id}`, newData);
   expect(res.status).toBe(200);
   expect(res.data.id).toBe(user.id);
   expect(res.data.name).toBe(newData.name);
@@ -72,10 +72,10 @@ test('DELETE /users/:id updates and returns 204', async (): Promise<any> => {
   const { user } = await testFactory(connection);
 
   // The actual delete returns a 204
-  let res = await axiosist(app).delete(`/users/${ user.id }`);
+  let res = await axiosist(app).delete(`/users/${user.id}`);
   expect(res.status).toBe(204);
 
   // Show now 404
-  res = await axiosist(app).get(`/users/${ user.id }`);
+  res = await axiosist(app).get(`/users/${user.id}`);
   expect(res.status).toBe(404);
 });
