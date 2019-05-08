@@ -11,8 +11,10 @@ export default (): Router => {
   const checkBookmarkExists = async (req, res, next): Promise<void> => {
     try {
       if (
-        (await bookmarkRepository.count({ id: req.params.id, archived: false })) ===
-        0
+        (await bookmarkRepository.count({
+          id: req.params.id,
+          archived: false,
+        })) === 0
       ) {
         res.sendStatus(404);
       }
@@ -20,7 +22,7 @@ export default (): Router => {
     } catch (e) {
       next(e);
     }
-  }
+  };
 
   router.get("/bookmarks", async (req, res, next) => {
     try {
@@ -33,7 +35,10 @@ export default (): Router => {
   router.get("/bookmarks/:id", checkBookmarkExists, async (req, res, next) => {
     try {
       res.json(
-        await bookmarkRepository.findOne({ id: req.params.id, archived: false }),
+        await bookmarkRepository.findOne({
+          id: req.params.id,
+          archived: false,
+        }),
       );
     } catch (e) {
       next(e);
@@ -57,14 +62,18 @@ export default (): Router => {
     }
   });
 
-  router.delete("/bookmarks/:id", checkBookmarkExists, async (req, res, next) => {
-    try {
-      await bookmarkRepository.update(req.params.id, { archived: true });
-      res.sendStatus(204);
-    } catch (e) {
-      next(e);
-    }
-  });
+  router.delete(
+    "/bookmarks/:id",
+    checkBookmarkExists,
+    async (req, res, next) => {
+      try {
+        await bookmarkRepository.update(req.params.id, { archived: true });
+        res.sendStatus(204);
+      } catch (e) {
+        next(e);
+      }
+    },
+  );
 
   return router;
 };

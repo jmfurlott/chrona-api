@@ -20,7 +20,7 @@ export default (): Router => {
     } catch (e) {
       next(e);
     }
-  }
+  };
 
   router.get("/users", async (req, res, next) => {
     try {
