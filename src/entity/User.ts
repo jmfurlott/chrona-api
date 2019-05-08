@@ -26,6 +26,9 @@ export class User {
   @Column({ unique: true })
   email: string;
 
+  @Column()
+  encrypted_password: string;
+
   @Column({ unique: true })
-  github_id: string; // NOTE only going to allow Github authentication
+  github_id: string;
 }
