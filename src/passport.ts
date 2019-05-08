@@ -1,3 +1,4 @@
+import * as express from "express";
 import { getRepository } from "typeorm";
 import * as jwt from "jsonwebtoken";
 import * as bcrypt from "bcryptjs";
@@ -69,7 +70,54 @@ export const initPassport = () => {
       },
     ),
   );
+
+  /* TODO Github */
+
+  passport.use(
+    new JWTStrategy(
+      {
+        secretOrKey: process.env.JWT_SECRET,
+        jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+      },
+      async (token, done) => {
+        try {
+          return done(null, token.user);
+        } catch (e) {
+          return done(e);
+        }
+      },
+    ),
+  );
 };
 
-export const authRoutes = app => {
+export const authRoutes = (): express.Router => {
+  const router = express.Router();
+
+  router.post(
+    "/auth/local/login",
+    passport.authenticate("login", {
+      failureRedirect: "/failedredirectlogin_local___", // TODO
+    }),
+    (req, res) => {
+      const { user } = req;
+      const token = jwt.sign({ user }, process.env.JWT_SECRET);
+      res.json({
+        type: "user",
+        id: user.id,
+        data: Object.assign({}, user, { token }),
+      });
+    },
+  );
+
+  router.post(
+    "/auth/local/signup",
+    passport.authenticate("signup", { failureRedirect: "/failedredirectsignup_local___" }), // TODO
+    async (req, res) => {
+      const { user } = req;
+      const token = jwt.sign({ user }, process.env.JWT_SECRET);
+      res.json(Object.assign({}, user, { token }));
+    },
+  );
+
+  return router;
 };
