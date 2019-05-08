@@ -101,11 +101,7 @@ export const authRoutes = (): express.Router => {
     (req, res) => {
       const { user } = req;
       const token = jwt.sign({ user }, process.env.JWT_SECRET);
-      res.json({
-        type: "user",
-        id: user.id,
-        data: Object.assign({}, user, { token }),
-      });
+      res.json(Object.assign({}, user, { token }));
     },
   );
 

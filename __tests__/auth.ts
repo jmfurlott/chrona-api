@@ -14,7 +14,7 @@ beforeAll(async () => {
 
 afterAll(() => connection.close());
 
-test('POST /auth/local/login creates a user and returns token', async (): Promise<any> => {
+test('POST /auth/local/signup and logins succesfully', async (): Promise<any> => {
   const app = makeApp();
 
   const formData = {
@@ -22,9 +22,18 @@ test('POST /auth/local/login creates a user and returns token', async (): Promis
     password: faker.internet.password(),
   };
 
-  const res = await axiosist(app).post(`/auth/local/signup`, formData);
+  let res = await axiosist(app).post(`/auth/local/signup`, formData);
   expect(res.status).toBe(200);
   expect(res.data.email).toBe(formData.email);
   expect(res.data.encrypted_password).toBeTruthy();
+
+  res = await axiosist(app).post(`/auth/local/login`, formData);
+  expect(res.status).toBe(200);
+  expect(res.data.email).toBe(formData.email);
   expect(res.data.encrypted_password).toBeTruthy();
 });
+
+/* TODO
+test('POST login with missing account returns error');
+test('POST login with incorrect password returns error');
+*/
