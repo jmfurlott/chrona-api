@@ -20,7 +20,7 @@ export class User {
   @UpdateDateColumn()
   updated_at: Date;
 
-  @Column()
+  @Column({ nullable: true })
   name: string;
 
   @Column({ unique: true })
@@ -29,6 +29,6 @@ export class User {
   @Column({ nullable: true })
   encrypted_password: string;
 
-  @Column({ unique: true })
+  @Column({ unique: true, nullable: true })
   github_id: string;
 }

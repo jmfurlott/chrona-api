@@ -3,7 +3,6 @@ import axiosist from "axiosist";
 import createConnection from "../src/connection";
 import makeApp from "../src/app";
 
-
 let connection;
 beforeAll(async () => {
   connection = await createConnection();
