@@ -18,7 +18,7 @@ afterAll(() => connection.close());
 test('GET /users returns expected count', async (): Promise<any> => {
   const app = makeApp();
 
-  const expectedCount: number = await connection.getRepository(User).count();
+  const expectedCount: number = await connection.getRepository(User).count({ archived: false });
   const res = await axiosist(app).get(`/users`);
   expect(res.status).toBe(200);
   expect(res.data.length).toBe(expectedCount);

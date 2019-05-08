@@ -18,7 +18,7 @@ afterAll(() => connection.close());
 test('GET /bookmarks returns expected count', async (): Promise<any> => {
   const app = makeApp();
 
-  const expectedCount: number = await connection.getRepository(Bookmark).count();
+  const expectedCount: number = await connection.getRepository(Bookmark).count({ archived: false });
   const res = await axiosist(app).get(`/bookmarks`);
   expect(res.status).toBe(200);
   expect(res.data.length).toBe(expectedCount);

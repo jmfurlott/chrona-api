@@ -12,7 +12,7 @@ export default (): Router => {
     try {
       if (
         (await bookmarkRepository.count({ id: req.params.id, archived: false })) ===
-          0
+        0
       ) {
         res.sendStatus(404);
       }
@@ -24,7 +24,7 @@ export default (): Router => {
 
   router.get("/bookmarks", async (req, res, next) => {
     try {
-      res.json(await bookmarkRepository.find());
+      res.json(await bookmarkRepository.find({ archived: false }));
     } catch (e) {
       next(e);
     }
