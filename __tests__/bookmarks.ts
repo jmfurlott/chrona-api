@@ -8,19 +8,23 @@ import createConnection from "../src/connection";
 import makeApp from "../src/app";
 import { testFactory } from "./utils";
 import { Bookmark } from "../src/entity/Bookmark";
+import { User } from "../src/entity/User";
 
 
 let connection: Connection;
 let userRequest: AxiosInstance;
+let user: User;
 beforeAll(async () => {
   connection = await createConnection();
 
   // Login and generate a token
   const app = makeApp();
-  const { data: { token } } = await axiosist(app).post("/auth/local/signup", {
+  const { data: { token, id } } = await axiosist(app).post("/auth/local/signup", {
     email: faker.internet.email(),
     password: faker.internet.password(),
   });
+
+  user = await connection.getRepository(User).findOne(id);
 
   userRequest = axios.create({
     adapter: axiosist.createAdapter(app),
@@ -39,10 +43,21 @@ test('GET /bookmarks unauthenticated returns a 401', async (): Promise<any> => {
 });
 
 test('GET /bookmarks returns expected count', async (): Promise<any> => {
-  const expectedCount: number = await connection.getRepository(Bookmark).count({ archived: false });
+  const newBookmark = {
+    title: faker.lorem.words(),
+    description: faker.lorem.sentences(),
+    href: faker.internet.url(),
+  };
+  await userRequest.post(`/bookmarks`, newBookmark);
+
+  const bookmarks: Bookmark[] = await connection.getRepository(Bookmark).find({
+    user: user,
+    archived: false
+  });
+
   const res = await userRequest.get(`/bookmarks`);
   expect(res.status).toBe(200);
-  expect(res.data.length).toBe(expectedCount);
+  expect(res.data.length).toBe(bookmarks.length);
 });
 
 test('GET /bookmarks/:id returns expected bookmark', async (): Promise<any> => {

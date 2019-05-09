@@ -1,10 +1,11 @@
 import {
-  Entity,
-  PrimaryGeneratedColumn,
-  CreateDateColumn,
-  UpdateDateColumn,
   Column,
-  ManyToOne
+  CreateDateColumn,
+  Entity,
+  Index,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from "typeorm";
 
 import { User } from "./User";
@@ -14,6 +15,7 @@ export class Bookmark {
   @Column({ default: false })
   archived: boolean;
 
+  @Index()
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
@@ -32,6 +34,7 @@ export class Bookmark {
   @Column("varchar")
   href: string;
 
-  @ManyToOne(type => User, user => user.bookmarks)
+  @Index()
+  @ManyToOne(() => User, user => user.bookmarks)
   user: User;
 }

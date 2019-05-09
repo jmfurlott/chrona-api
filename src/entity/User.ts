@@ -1,10 +1,11 @@
 import {
-  Entity,
-  PrimaryGeneratedColumn,
-  CreateDateColumn,
-  UpdateDateColumn,
   Column,
+  CreateDateColumn,
+  Entity,
+  Index,
   OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from "typeorm";
 
 import { Bookmark } from "./Bookmark";
@@ -14,6 +15,7 @@ export class User {
   @Column({ default: false })
   archived: boolean;
 
+  @Index()
   @PrimaryGeneratedColumn("uuid")
   id: string;
 
@@ -35,6 +37,6 @@ export class User {
   @Column({ unique: true, nullable: true })
   githubId: string;
 
-  @OneToMany(type => Bookmark, bookmark => bookmark.user)
+  @OneToMany(() => Bookmark, bookmark => bookmark.user)
   bookmarks: Bookmark[];
 }

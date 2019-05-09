@@ -3,6 +3,7 @@ import * as express from "express";
 import { getRepository } from "typeorm";
 
 import { Bookmark } from "../entity/Bookmark";
+import { User } from "../entity/User";
 
 export default (): Router => {
   const router = express.Router();
@@ -26,7 +27,11 @@ export default (): Router => {
 
   router.get("/bookmarks", async (req, res, next) => {
     try {
-      res.json(await bookmarkRepository.find({ archived: false }));
+      const bookmarks = await bookmarkRepository.find({
+        archived: false,
+        user: req.user,
+      });
+      res.json(bookmarks);
     } catch (e) {
       next(e);
     }
@@ -40,6 +45,8 @@ export default (): Router => {
           archived: false,
         }),
       );
+
+      // TODO throw 404 if not for proper user
     } catch (e) {
       next(e);
     }
@@ -47,7 +54,11 @@ export default (): Router => {
 
   router.post("/bookmarks", async (req, res, next) => {
     try {
-      res.json(await bookmarkRepository.save(req.body));
+      const bookmark = await bookmarkRepository.save(Object.assign({}, req.body, {
+        user: req.user,
+      }));
+
+      res.json(bookmark);
     } catch (e) {
       next(e);
     }
@@ -57,6 +68,7 @@ export default (): Router => {
     try {
       await bookmarkRepository.update(req.params.id, req.body);
       res.json(await bookmarkRepository.findOne(req.params.id));
+      // TODO throw 400 if not for proper user
     } catch (e) {
       next(e);
     }
