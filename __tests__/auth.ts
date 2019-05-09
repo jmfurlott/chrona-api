@@ -1,4 +1,5 @@
-import axiosist from "axiosist";
+import * as axiosist from "axiosist";
+import { Connection } from "typeorm";
 import * as faker from "faker";
 
 import createConnection from "../src/connection";
@@ -7,7 +8,7 @@ import { testFactory } from "./utils";
 import { User } from "../src/entity/User";
 
 
-let connection;
+let connection: Connection;
 beforeAll(async () => {
   connection = await createConnection();
 });

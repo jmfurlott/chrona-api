@@ -14,8 +14,13 @@ beforeAll(async () => {
 
 afterAll(() => connection.close());
 
+/*
+ * NOTE: Currently skipping all these as user routes were never intended to work
+ * like this; simply just a hello world for typeorm/express setup
+ */
 
-test('GET /users returns expected count', async (): Promise<any> => {
+
+test.skip('GET /users returns expected count', async (): Promise<any> => {
   const app = makeApp();
 
   const expectedCount: number = await connection.getRepository(User).count({ archived: false });
@@ -25,18 +30,18 @@ test('GET /users returns expected count', async (): Promise<any> => {
 });
 
 
-test('GET /users/:id returns expected user', async (): Promise<any> => {
+test.skip('GET /users/:id returns expected user', async (): Promise<any> => {
   const app = makeApp();
-  const { user } = await testFactory(connection);
+  const { user } = await testFactory();
   const res = await axiosist(app).get(`/users/${user.id}`);
   expect(res.status).toBe(200);
   expect(res.data.id).toBe(user.id);
 });
 
 
-test('PUT /users/:id updates and returns expected user', async (): Promise<any> => {
+test.skip('PUT /users/:id updates and returns expected user', async (): Promise<any> => {
   const app = makeApp();
-  const { user } = await testFactory(connection);
+  const { user } = await testFactory();
 
   const newData = {
     name: faker.name.findName(),
@@ -49,7 +54,7 @@ test('PUT /users/:id updates and returns expected user', async (): Promise<any> 
 });
 
 
-test('POST /users creates and returns expected user', async (): Promise<any> => {
+test.skip('POST /users creates and returns expected user', async (): Promise<any> => {
   const app = makeApp();
 
   const newUser = {
@@ -67,9 +72,9 @@ test('POST /users creates and returns expected user', async (): Promise<any> => 
 });
 
 
-test('DELETE /users/:id updates and returns 204', async (): Promise<any> => {
+test.skip('DELETE /users/:id updates and returns 204', async (): Promise<any> => {
   const app = makeApp();
-  const { user } = await testFactory(connection);
+  const { user } = await testFactory();
 
   // The actual delete returns a 204
   let res = await axiosist(app).delete(`/users/${user.id}`);

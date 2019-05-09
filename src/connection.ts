@@ -1,9 +1,9 @@
-import { createConnection } from "typeorm";
+import { createConnection, Connection } from "typeorm";
 
 import { User } from "./entity/User";
 import { Bookmark } from "./entity/Bookmark";
 
-export default () => createConnection({
+export default (): Promise<Connection> => createConnection({
   type: "postgres",
   host: process.env.BOOKMARKS_DB_HOST,
   port: 5432,
