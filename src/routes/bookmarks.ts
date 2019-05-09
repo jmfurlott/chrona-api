@@ -3,23 +3,25 @@ import * as express from "express";
 import { getRepository } from "typeorm";
 
 import { Bookmark } from "../entity/Bookmark";
-import { User } from "../entity/User";
 
 export default (): Router => {
   const router = express.Router();
   const bookmarkRepository = getRepository(Bookmark);
 
+  // Check if bookmark exists at all and/or for THAT user requesting
   const checkBookmarkExists = async (req, res, next): Promise<void> => {
     try {
       if (
         (await bookmarkRepository.count({
           id: req.params.id,
           archived: false,
+          user: req.user,
         })) === 0
       ) {
         res.sendStatus(404);
+      } else {
+        next();
       }
-      next();
     } catch (e) {
       next(e);
     }
@@ -45,8 +47,6 @@ export default (): Router => {
           archived: false,
         }),
       );
-
-      // TODO throw 404 if not for proper user
     } catch (e) {
       next(e);
     }
@@ -68,7 +68,6 @@ export default (): Router => {
     try {
       await bookmarkRepository.update(req.params.id, req.body);
       res.json(await bookmarkRepository.findOne(req.params.id));
-      // TODO throw 400 if not for proper user
     } catch (e) {
       next(e);
     }

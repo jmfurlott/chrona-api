@@ -61,24 +61,60 @@ test('GET /bookmarks returns expected count', async (): Promise<any> => {
 });
 
 test('GET /bookmarks/:id returns expected bookmark', async (): Promise<any> => {
-  const { bookmark } = await testFactory();
-  const res = await userRequest.get(`/bookmarks/${bookmark.id}`);
+  const newBookmark = {
+    title: faker.lorem.words(),
+    description: faker.lorem.sentences(),
+    href: faker.internet.url(),
+  };
+
+  const { data: { id } } = await userRequest.post(`/bookmarks`, newBookmark);
+  const res = await userRequest.get(`/bookmarks/${id}`);
   expect(res.status).toBe(200);
-  expect(res.data.id).toBe(bookmark.id);
+  expect(res.data.id).toBe(id);
+});
+
+
+test('GET /bookmarks/:id if not created by user returns 404', async (): Promise<any> => {
+  const { bookmark } = await testFactory();
+  try {
+    await userRequest.get(`/bookmarks/${bookmark.id}`);
+  } catch ({ response: { status } }) {
+    expect(status).toBe(404);
+  }
 });
 
 
 test('PUT /bookmarks/:id updates and returns expected bookmark', async (): Promise<any> => {
-  const { bookmark } = await testFactory();
+  const newBookmark = {
+    title: faker.lorem.words(),
+    description: faker.lorem.sentences(),
+    href: faker.internet.url(),
+  };
+
+  const { data: { id } } = await userRequest.post(`/bookmarks`, newBookmark);
 
   const newData = {
     title: faker.lorem.words(),
   };
 
-  const res = await userRequest.put(`/bookmarks/${bookmark.id}`, newData);
+  const res = await userRequest.put(`/bookmarks/${id}`, newData);
   expect(res.status).toBe(200);
-  expect(res.data.id).toBe(bookmark.id);
+  expect(res.data.id).toBe(id);
   expect(res.data.title).toBe(newData.title);
+});
+
+
+test('PUT /bookmarks/:id on another user returns error', async (): Promise<any> => {
+  const { bookmark } = await testFactory();
+  const newData = {
+    title: faker.lorem.words(),
+  };
+
+  try {
+    await userRequest.put(`/bookmarks/${bookmark.id}`, newData);
+  } catch ({ response: { status } }) {
+    expect(status).toBe(404);
+  }
 });
 
 
@@ -99,7 +135,12 @@ test('POST /bookmarks creates and returns expected bookmark', async (): Promise<
 
 
 test('DELETE /bookmarks/:id updates and returns 204', async (): Promise<any> => {
-  const { bookmark } = await testFactory();
+  const newBookmark = {
+    title: faker.lorem.words(),
+    description: faker.lorem.sentences(),
+    href: faker.internet.url(),
+  };
+  const { data: bookmark } = await userRequest.post(`/bookmarks`, newBookmark);
 
   // The actual delete returns a 204
   let res = await userRequest.delete(`/bookmarks/${bookmark.id}`);
