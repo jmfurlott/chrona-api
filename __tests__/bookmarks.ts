@@ -14,6 +14,11 @@ beforeAll(async () => {
 
 afterAll(() => connection.close());
 
+test('GET /bookmarks unauthenticated returns a 401', async (): Promise<any> => {
+  const app = makeApp();
+  const res = await axiosist(app).get(`/bookmarks`);
+  expect(res.status).toBe(401);
+});
 
 test('GET /bookmarks returns expected count', async (): Promise<any> => {
   const app = makeApp();
@@ -27,7 +32,7 @@ test('GET /bookmarks returns expected count', async (): Promise<any> => {
 
 test('GET /bookmarks/:id returns expected bookmark', async (): Promise<any> => {
   const app = makeApp();
-  const { bookmark } = await testFactory(connection);
+  const { bookmark } = await testFactory();
   const res = await axiosist(app).get(`/bookmarks/${bookmark.id}`);
   expect(res.status).toBe(200);
   expect(res.data.id).toBe(bookmark.id);
@@ -36,7 +41,7 @@ test('GET /bookmarks/:id returns expected bookmark', async (): Promise<any> => {
 
 test('PUT /bookmarks/:id updates and returns expected bookmark', async (): Promise<any> => {
   const app = makeApp();
-  const { bookmark } = await testFactory(connection);
+  const { bookmark } = await testFactory();
 
   const newData = {
     title: faker.lorem.words(),
@@ -69,7 +74,7 @@ test('POST /bookmarks creates and returns expected bookmark', async (): Promise<
 
 test('DELETE /bookmarks/:id updates and returns 204', async (): Promise<any> => {
   const app = makeApp();
-  const { bookmark } = await testFactory(connection);
+  const { bookmark } = await testFactory();
 
   // The actual delete returns a 204
   let res = await axiosist(app).delete(`/bookmarks/${bookmark.id}`);

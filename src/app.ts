@@ -26,8 +26,17 @@ export default (): Application => {
   /* Actually put the login/signup routes onto the app */
   app.use(authRoutes());
 
+  /* Start middleware for passport for the all following routes */
+  app.all("/*", passport.authenticate("jwt", { session: false }));
+
   /* Set up resource routes */
   app.use(routes());
+
+  /* Basic error handler */
+  app.use((err, req, res, next) => {
+    console.error(err);
+    next(err);
+  });
 
   return app;
 };
