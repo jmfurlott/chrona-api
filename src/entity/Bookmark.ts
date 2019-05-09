@@ -4,7 +4,10 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   Column,
+  ManyToOne
 } from "typeorm";
+
+import { User } from "./User";
 
 @Entity()
 export class Bookmark {
@@ -15,10 +18,10 @@ export class Bookmark {
   id: string;
 
   @CreateDateColumn()
-  created_at: Date;
+  createdAt: Date;
 
   @UpdateDateColumn()
-  updated_at: Date;
+  updatedAt: Date;
 
   @Column()
   title: string;
@@ -28,4 +31,7 @@ export class Bookmark {
 
   @Column("varchar")
   href: string;
+
+  @ManyToOne(type => User, user => user.bookmarks)
+  user: User;
 }

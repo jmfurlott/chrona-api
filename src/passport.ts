@@ -28,7 +28,7 @@ export const initPassport = () => {
           const salt = bcrypt.genSaltSync(10);
           const user = await userRepository.save({
             email,
-            encrypted_password: bcrypt.hashSync(password, salt),
+            encryptedPassword: bcrypt.hashSync(password, salt),
           });
           return done(null, user, "Success Registered");
         } catch (err) {
@@ -57,7 +57,7 @@ export const initPassport = () => {
           // Validate password and make sure it matches with the corresponding
           // hash stored in the database If the passwords match, it returns a
           // value of true.
-          const isValid = bcrypt.compareSync(password, user.encrypted_password);
+          const isValid = bcrypt.compareSync(password, user.encryptedPassword);
           if (!isValid) {
             return done(null, false, { message: 'Wrong Password' });
           }

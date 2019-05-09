@@ -26,12 +26,12 @@ test('POST /auth/local/signup and logins succesfully', async (): Promise<any> =>
   let res = await axiosist(app).post(`/auth/local/signup`, formData);
   expect(res.status).toBe(200);
   expect(res.data.email).toBe(formData.email);
-  expect(res.data.encrypted_password).toBeTruthy();
+  expect(res.data.encryptedPassword).toBeTruthy();
 
   res = await axiosist(app).post(`/auth/local/login`, formData);
   expect(res.status).toBe(200);
   expect(res.data.email).toBe(formData.email);
-  expect(res.data.encrypted_password).toBeTruthy();
+  expect(res.data.encryptedPassword).toBeTruthy();
 });
 
 /* TODO

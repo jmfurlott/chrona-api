@@ -4,7 +4,10 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   Column,
+  OneToMany,
 } from "typeorm";
+
+import { Bookmark } from "./Bookmark";
 
 @Entity()
 export class User {
@@ -15,10 +18,10 @@ export class User {
   id: string;
 
   @CreateDateColumn()
-  created_at: Date;
+  createdAt: Date;
 
   @UpdateDateColumn()
-  updated_at: Date;
+  updatedAt: Date;
 
   @Column({ nullable: true })
   name: string;
@@ -27,8 +30,11 @@ export class User {
   email: string;
 
   @Column({ nullable: true })
-  encrypted_password: string;
+  encryptedPassword: string;
 
   @Column({ unique: true, nullable: true })
-  github_id: string;
+  githubId: string;
+
+  @OneToMany(type => Bookmark, bookmark => bookmark.user)
+  bookmarks: Bookmark[];
 }
