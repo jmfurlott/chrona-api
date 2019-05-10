@@ -9,6 +9,7 @@ import {
 } from "typeorm";
 
 import { Bookmark } from "./Bookmark";
+import { PublicToken } from "./PublicToken";
 
 @Entity()
 export class User {
@@ -39,4 +40,7 @@ export class User {
 
   @OneToMany(() => Bookmark, bookmark => bookmark.user)
   bookmarks: Bookmark[];
+
+  @OneToMany(() => PublicToken, publicToken => publicToken.user)
+  publicTokens: PublicToken[];
 }

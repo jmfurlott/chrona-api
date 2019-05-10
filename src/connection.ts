@@ -1,7 +1,10 @@
 import { createConnection, Connection } from "typeorm";
 
-import { User } from "./entity/User";
-import { Bookmark } from "./entity/Bookmark";
+import {
+  Bookmark,
+  PublicToken,
+  User,
+} from "./entity";
 
 export default (): Promise<Connection> => createConnection({
   type: "postgres",
@@ -13,7 +16,8 @@ export default (): Promise<Connection> => createConnection({
   synchronize: true,
   logging: false,
   entities: [
-    User,
     Bookmark,
+    PublicToken,
+    User,
   ]
 });
