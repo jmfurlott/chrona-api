@@ -4,9 +4,10 @@ import * as cors from "cors";
 import * as passport from "passport";
 import { Application, Request, Response } from "express";
 
-import { name, author, version } from "../package.json";
 import routes from "./routes";
+import { checkPublicToken } from "./routes/bookmarks";
 import { initPassport, authRoutes } from "./passport";
+import { name, author, version } from "../package.json";
 
 export default (): Application => {
   // create express app
@@ -27,7 +28,7 @@ export default (): Application => {
   app.use(authRoutes());
 
   /* Start middleware for passport for the all following routes */
-  app.all("/*", passport.authenticate("jwt", { session: false }));
+  app.all("/*", checkPublicToken, passport.authenticate("jwt", { session: false }));
 
   /* Set up resource routes */
   app.use(routes());
@@ -40,11 +41,3 @@ export default (): Application => {
 
   return app;
 };
-
-// app.use(
-//   "/api/secure",
-//   passport.authenticate("jwt", { session: false }),
-//   (req, res) => {
-//     res.json({ secure: "test" });
-//   },
-// )

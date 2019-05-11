@@ -39,24 +39,30 @@ export default (): Router => {
     }
   });
 
-  router.get("/public_tokens/:id", checkPublicTokenExists, async (req, res, next) => {
-    try {
-      res.json(
-        await publicTokenRepository.findOne({
-          id: req.params.id,
-          archived: false,
-        }),
-      );
-    } catch (e) {
-      next(e);
-    }
-  });
+  router.get(
+    "/public_tokens/:id",
+    checkPublicTokenExists,
+    async (req, res, next) => {
+      try {
+        res.json(
+          await publicTokenRepository.findOne({
+            id: req.params.id,
+            archived: false,
+          }),
+        );
+      } catch (e) {
+        next(e);
+      }
+    },
+  );
 
   router.post("/public_tokens", async (req, res, next) => {
     try {
-      const publicToken = await publicTokenRepository.save(Object.assign({}, req.body, {
-        user: req.user,
-      }));
+      const publicToken = await publicTokenRepository.save(
+        Object.assign({}, req.body, {
+          user: req.user,
+        }),
+      );
 
       res.json(publicToken);
     } catch (e) {
@@ -64,14 +70,18 @@ export default (): Router => {
     }
   });
 
-  router.put("/public_tokens/:id", checkPublicTokenExists, async (req, res, next) => {
-    try {
-      await publicTokenRepository.update(req.params.id, req.body);
-      res.json(await publicTokenRepository.findOne(req.params.id));
-    } catch (e) {
-      next(e);
-    }
-  });
+  router.put(
+    "/public_tokens/:id",
+    checkPublicTokenExists,
+    async (req, res, next) => {
+      try {
+        await publicTokenRepository.update(req.params.id, req.body);
+        res.json(await publicTokenRepository.findOne(req.params.id));
+      } catch (e) {
+        next(e);
+      }
+    },
+  );
 
   router.delete(
     "/public_tokens/:id",

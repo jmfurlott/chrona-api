@@ -6,7 +6,6 @@ import * as faker from "faker";
 
 import createConnection from "../src/connection";
 import makeApp from "../src/app";
-import { testFactory } from "./utils";
 import { Bookmark, PublicToken, User } from "../src/entity";
 
 
@@ -94,9 +93,7 @@ test("User can read-only GET bookmarks with /bookmarks?token={token}", async ():
 
   // Now, create a public token
   let res: AxiosResponse = await userRequest.post("/public_tokens", {});
-
-  // Take any token there might be; know for sure there is at least one here ^
-  const [publicToken]: [PublicToken] = res.data;
+  const publicToken: PublicToken = res.data;
 
   // NOTE this is using axiosist, not userRequest
   res = await axiosist(app).get(`/bookmarks?publicToken=${publicToken.id}`);
@@ -121,6 +118,24 @@ test("User cannot read-only GET bookmarks with an invalid token on /bookmarks?to
   expect(res.status).toBe(403); // Forbidden
 });
 
-test.skip("TODO User cannot edit bookmarks with /bookmarks?token={token}", async (): Promise<any> => {
+test("User cannot edit bookmarks with /bookmarks?token={token}", async (): Promise<any> => {
+  // Generate valid token and then try to edit bookmark
+  // Create some bookmarks
+  const newBookmark = {
+    title: faker.lorem.words(),
+    description: faker.lorem.sentences(),
+    href: faker.internet.url(),
+  };
+  await userRequest.post(`/bookmarks`, newBookmark);
 
+  // Now, create a public token
+  let res: AxiosResponse = await userRequest.post("/public_tokens", {});
+  const publicToken: PublicToken = res.data;
+
+  // NOTE this is using axiosist, not userRequest
+  res = await axiosist(app).post(`/bookmarks?publicToken=${publicToken.id}`, {
+    title: "Hello world",
+    href: "http://fail.com",
+  });
+  expect(res.status).toBe(401);
 });

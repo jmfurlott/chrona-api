@@ -2,7 +2,49 @@ import { Router } from "express";
 import * as express from "express";
 import { getRepository } from "typeorm";
 
-import { Bookmark } from "../entity/Bookmark";
+import { Bookmark, PublicToken } from "../entity";
+
+export const checkPublicToken = async (req, res, next): Promise<void> => {
+  try {
+    const {
+      method,
+      url,
+      query: { publicToken },
+    } = req;
+    if (
+      method === "GET" &&
+      url.match(/\/bookmarks/) &&
+      publicToken !== undefined
+    ) {
+      // We have a token for only GET /bookmarks but have not validated it
+      // NOTE better name needed than return value ha
+      const [rv] = await getRepository(PublicToken).find({
+        relations: ["user"],
+        where: [{ id: publicToken, archived: false }],
+      });
+
+      if (rv) {
+        // Fetch the necessary bookmarks
+        const bookmarks = await getRepository(Bookmark).find({
+          archived: false,
+          user: rv.user,
+        });
+
+        // Go ahead and return bookmarks
+        res.json(bookmarks);
+      } else {
+        // Attempted but forbidden!
+        res.sendStatus(403);
+      }
+    } else {
+      // Carry on to regular JWT'ing, as there is nothing public about this route
+      next();
+    }
+  } catch (e) {
+    // Caught for any arbitrary errors
+    next(e);
+  }
+};
 
 export default (): Router => {
   const router = express.Router();
@@ -27,7 +69,7 @@ export default (): Router => {
     }
   };
 
-  router.get("/bookmarks", async (req, res, next) => {
+  router.get("/bookmarks", checkPublicToken, async (req, res, next) => {
     try {
       const bookmarks = await bookmarkRepository.find({
         archived: false,
@@ -54,9 +96,11 @@ export default (): Router => {
 
   router.post("/bookmarks", async (req, res, next) => {
     try {
-      const bookmark = await bookmarkRepository.save(Object.assign({}, req.body, {
-        user: req.user,
-      }));
+      const bookmark = await bookmarkRepository.save(
+        Object.assign({}, req.body, {
+          user: req.user,
+        }),
+      );
 
       res.json(bookmark);
     } catch (e) {
