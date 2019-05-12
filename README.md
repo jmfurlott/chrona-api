@@ -1,4 +1,4 @@
-# bookmarks-api
+# chrona-api
 
 ## Necessary variables
 

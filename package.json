@@ -1,7 +1,7 @@
 {
-   "name": "bookmarks-api",
+   "name": "chroma-api",
    "version": "0.0.1",
-   "description": "bookmarks-api",
+   "description": "chroma-api",
    "author": "Joseph Furlott <jmfurlott@gmail.com>",
    "devDependencies": {
       "@types/express": "^4.16.1",
