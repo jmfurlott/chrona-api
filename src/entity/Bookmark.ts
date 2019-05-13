@@ -28,7 +28,7 @@ export class Bookmark {
   @Column()
   title: string;
 
-  @Column("varchar")
+  @Column({ type: "varchar", nullable: true })
   description: string;
 
   @Column("varchar")
