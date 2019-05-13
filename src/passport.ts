@@ -25,6 +25,9 @@ export const initPassport = () => {
       { usernameField: "email", passwordField: "password" },
       async (email: string, password: string, done: Function) => {
         try {
+          if (await userRepository.findOne({ email })) {
+            return done(null, false, { message: `Email ${email} alread exists` });
+          }
           const salt = bcrypt.genSaltSync(10);
           const user = await userRepository.save({
             email,
@@ -65,7 +68,7 @@ export const initPassport = () => {
           // Send the user information to the next middleware
           return done(null, user, { message: "Logged in Successfully" });
         } catch (error) {
-          return done(error);
+          return done(null, false, error);
         }
       },
     ),
@@ -95,24 +98,30 @@ export const authRoutes = (): express.Router => {
 
   router.post(
     "/auth/local/login",
-    passport.authenticate("login", {
-      failureRedirect: "/failedredirectlogin_local___", // TODO
-    }),
+    passport.authenticate("login", { failWithError: true }),
     (req, res) => {
       const { user } = req;
       const token = jwt.sign({ user }, process.env.JWT_SECRET);
       res.json(Object.assign({}, user, { token }));
     },
+    (err, req, res, next) => {
+      // console.log(err);
+      next(err);
+    }
   );
 
   router.post(
     "/auth/local/signup",
-    passport.authenticate("signup", { failureRedirect: "/failedredirectsignup_local___" }), // TODO
-    async (req, res) => {
+    passport.authenticate("signup", { failWithError: true }),
+    (req, res) => {
       const { user } = req;
       const token = jwt.sign({ user }, process.env.JWT_SECRET);
       res.json(Object.assign({}, user, { token }));
     },
+    (err, req, res, next) => {
+      // console.log(err);
+      next(err);
+    }
   );
 
   return router;

@@ -53,13 +53,51 @@ test('POST /auth/local/signup and logins succesfully', async (): Promise<any> =>
   expect(res.data.encryptedPassword).toBeTruthy();
 });
 
+/* TODO Add messages to failed logins */
+test("POST signup with existing account returns error", async (): Promise<any> => {
+  const app = makeApp();
 
-test.skip("TODO POST login with missing account returns error", async (): Promise<any> => {
+  const formData = { // These data do not exist in the database
+    email: user.email,
+    password: faker.internet.password(),
+  };
 
+  try {
+    await axiosist(app).post(`/auth/local/signup`, formData);
+  } catch (e) {
+    expect(e.status).toBe(401);
+  }
 });
 
-test.skip("TODO POST login with incorrect password returns error", async (): Promise<any> => {
 
+test("POST login with missing account returns error", async (): Promise<any> => {
+  const app = makeApp();
+
+  const formData = { // These data do not exist in the database
+    email: faker.internet.email(),
+    password: faker.internet.password(),
+  };
+
+  try {
+    await axiosist(app).post(`/auth/local/login`, formData);
+  } catch (e) {
+    expect(e.status).toBe(401);
+  }
+});
+
+test("POST login with incorrect password returns error", async (): Promise<any> => {
+  const app = makeApp();
+
+  const formData = {
+    email: user.email,
+    password: faker.internet.password(),
+  };
+
+  try {
+    await axiosist(app).post(`/auth/local/login`, formData);
+  } catch (e) {
+    expect(e.status).toBe(401);
+  }
 });
 
 /* Public tokens */
