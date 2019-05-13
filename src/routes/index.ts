@@ -1,7 +1,7 @@
 import { Router } from "express";
 import * as express from "express";
 
-import users from "./users";
+// import users from "./users";
 import bookmarks from "./bookmarks";
 import publicTokens from "./publicTokens";
 
@@ -10,7 +10,7 @@ export default (): Router => {
 
   router.use(bookmarks());
   router.use(publicTokens());
-  router.use(users());
+  // router.use(users());
 
   return router;
 };
