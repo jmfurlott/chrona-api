@@ -36,7 +36,7 @@ export default (): Application => {
   /* Basic error handler */
   app.use((err, req, res, next) => {
     console.error(err);
-    next(err);
+    res.status(err.status).json(err);
   });
 
   return app;
