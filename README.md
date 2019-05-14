@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/jmfurlott/chrona-api/tree/master.svg?style=svg)](https://circleci.com/gh/jmfurlott/chrona-api/tree/master)
+
 # chrona-api
 
 ## Necessary variables
