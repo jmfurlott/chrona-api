@@ -11,7 +11,6 @@ export const testFactory = async () => {
   const user = await userRepository.save({
     name: faker.name.findName(),
     email: faker.internet.email(),
-    githubId: faker.random.uuid(),
   });
 
   const bookmarkRepository = getRepository(Bookmark);

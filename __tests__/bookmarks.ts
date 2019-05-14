@@ -75,8 +75,8 @@ test('GET /bookmarks/:id returns expected bookmark', async (): Promise<any> => {
 
 
 test('GET /bookmarks/:id if not created by user returns 404', async (): Promise<any> => {
-  const { bookmark } = await testFactory();
   try {
+    const { bookmark } = await testFactory();
     await userRequest.get(`/bookmarks/${bookmark.id}`);
   } catch ({ response: { status } }) {
     expect(status).toBe(404);
@@ -105,12 +105,12 @@ test('PUT /bookmarks/:id updates and returns expected bookmark', async (): Promi
 
 
 test('PUT /bookmarks/:id on another user returns error', async (): Promise<any> => {
-  const { bookmark } = await testFactory();
-  const newData = {
-    title: faker.lorem.words(),
-  };
-
   try {
+    const { bookmark } = await testFactory();
+    const newData = {
+      title: faker.lorem.words(),
+    };
+
     await userRequest.put(`/bookmarks/${bookmark.id}`, newData);
   } catch ({ response: { status } }) {
     expect(status).toBe(404);
