@@ -1,6 +1,6 @@
 {
    "name": "chroma-api",
-   "version": "0.0.1",
+   "version": "0.1.0",
    "description": "chroma-api",
    "author": "Joseph Furlott <jmfurlott@gmail.com>",
    "devDependencies": {
