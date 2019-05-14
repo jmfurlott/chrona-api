@@ -1,6 +1,7 @@
 import * as express from "express";
 import * as bodyParser from "body-parser";
 import * as cors from "cors";
+import * as morgan from "morgan";
 import * as passport from "passport";
 import { Application, Request, Response } from "express";
 
@@ -12,8 +13,10 @@ import { name, author, version } from "../package.json";
 export default (): Application => {
   // create express app
   const app = express();
+
   app.use(bodyParser.json());
   app.use(cors());
+  app.use(morgan("combined"));
 
   app.get("/", (req: Request, res: Response) => {
     res.send({ name, author, version });

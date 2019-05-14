@@ -5,8 +5,6 @@ require("dotenv").config();
 import createConnection from "./connection";
 import makeApp from "./app";
 
-console.log("env", process.env);
-
 createConnection().then(() => {
   // Start express server
   const app = makeApp();
