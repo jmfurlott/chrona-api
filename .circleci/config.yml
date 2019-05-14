@@ -22,7 +22,7 @@ jobs: # a collection of steps
             - ./node_modules
       - run: # run tests
           name: test
-          command: JWT_SECRET=1337 BOOKMARKS_DB_NAME=postgres BOOKMARKS_DB_PASSWORD=postgres BOOKMARKS_DB_USERNAME=postgres BOOKMARKS_DB_HOST=localhost npx jest
+          command: JWT_SECRET=1337 BOOKMARKS_DB_NAME=postgres BOOKMARKS_DB_PASSWORD=postgres BOOKMARKS_DB_USERNAME=postgres BOOKMARKS_DB_HOST=localhost npx jest --coverage
       # - run: # run coverage report
       #     name: code-coverage
       #     command: './node_modules/.bin/nyc report --reporter=text-lcov'
